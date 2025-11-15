@@ -1,0 +1,31 @@
+{% extends 'transactions/base.html' %}
+
+{% block title %}Удалить транзакцию{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Удалить транзакцию</h5>
+            </div>
+            <div class="card-body">
+                <p>Вы уверены, что хотите удалить эту транзакцию?</p>
+                <ul>
+                    <li><strong>Дата:</strong> {{ object.date }}</li>
+                    <li><strong>Сумма:</strong> {{ object.amount }} ₽</li>
+                    <li><strong>Категория:</strong> {{ object.category }}</li>
+                    <li><strong>Подкатегория:</strong> {{ object.subcategory }}</li>
+                </ul>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'transactions:transaction_list' %}" class="btn btn-secondary">Отмена</a>
+                        <button type="submit" class="btn btn-danger">Удалить транзакцию</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

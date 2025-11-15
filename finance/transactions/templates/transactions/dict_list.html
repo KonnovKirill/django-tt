@@ -1,0 +1,48 @@
+{% extends 'transactions/base.html' %}
+
+{% block title %}{{ model_name|title }}ы{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>{{ model_name|title }}ы</h1>
+            <a href="{% url create_url %}" class="btn btn-primary">Добавить {{ model_name|title }}</a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                {% if object_list %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Название</th>
+                                    {% if show_type %}<th>Тип</th>{% endif %}
+                                    {% if show_category %}<th>Категория</th>{% endif %}
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for obj in object_list %}
+                                    <tr>
+                                        <td>{{ obj.name }}</td>
+                                        {% if show_type %}<td>{{ obj.type }}</td>{% endif %}
+                                        {% if show_category %}<td>{{ obj.category }}</td>{% endif %}
+                                        <td>
+                                            <a href="{% url update_url obj.pk %}" class="btn btn-sm btn-warning">Редактировать</a>
+                                            <a href="{% url delete_url obj.pk %}" class="btn btn-sm btn-danger">Удалить</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center">{{ model_name|title }}ы не найдены.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

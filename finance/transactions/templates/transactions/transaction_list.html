@@ -1,0 +1,133 @@
+{% extends 'transactions/base.html' %}
+
+{% block title %}Транзакции{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>движением денежных средств (ДДС) </h1>
+            <a href="{% url 'transactions:transaction_create' %}" class="btn btn-primary">Добавить транзакцию</a>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Фильтры</h5>
+            </div>
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-2">
+                        <label for="status" class="form-label">Статус</label>
+                        <select name="status" id="status" class="form-select">
+                            <option value="">Все</option>
+                            {% for status in statuses %}
+                                <option value="{{ status.id }}" {% if request.GET.status == status.id|stringformat:"s" %}selected{% endif %}>{{ status.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="type" class="form-label">Тип</label>
+                        <select name="type" id="type" class="form-select">
+                            <option value="">Все</option>
+                            {% for type in types %}
+                                <option value="{{ type.id }}" {% if request.GET.type == type.id|stringformat:"s" %}selected{% endif %}>{{ type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="category" class="form-label">Категория</label>
+                        <select name="category" id="category" class="form-select">
+                            <option value="">Все</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="subcategory" class="form-label">Подкатегория</label>
+                        <select name="subcategory" id="subcategory" class="form-select">
+                            <option value="">Все</option>
+                            {% for subcategory in subcategories %}
+                                <option value="{{ subcategory.id }}" {% if request.GET.subcategory == subcategory.id|stringformat:"s" %}selected{% endif %}>{{ subcategory.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="date_from" class="form-label">Дата от</label>
+                        <input type="date" name="date_from" id="date_from" class="form-control" value="{{ request.GET.date_from }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="date_to" class="form-label">Дата до</label>
+                        <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request.GET.date_to }}">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-secondary">Фильтровать</button>
+                        <a href="{% url 'transactions:transaction_list' %}" class="btn btn-outline-secondary">Очистить</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="card">
+            <div class="card-body">
+                {% if transactions %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Статус</th>
+                                    <th>Тип</th>
+                                    <th>Категория</th>
+                                    <th>Подкатегория</th>
+                                    <th>Сумма</th>
+                                    <th>Комментарий</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in transactions %}
+                                    <tr>
+                                        <td>{{ transaction.date }}</td>
+                                        <td>{{ transaction.status }}</td>
+                                        <td>{{ transaction.type }}</td>
+                                        <td>{{ transaction.category }}</td>
+                                        <td>{{ transaction.subcategory }}</td>
+                                        <td>{{ transaction.amount }} ₽</td>
+                                        <td>{{ transaction.comment|truncatechars:50 }}</td>
+                                        <td>
+                                            <a href="{% url 'transactions:transaction_update' transaction.pk %}" class="btn btn-sm btn-warning">Редактировать</a>
+                                            <a href="{% url 'transactions:transaction_delete' transaction.pk %}" class="btn btn-sm btn-danger">Удалить</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if is_paginated %}
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Предыдущая</a></li>
+                                {% endif %}
+                                <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+                                {% if page_obj.has_next %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Следующая</a></li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                {% else %}
+                    <p class="text-center">Транзакции не найдены.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+<script src="{% static 'transactions/js/script.js' %}"></script>
+{% endblock %}
