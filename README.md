@@ -65,3 +65,11 @@
 - `transactions/`: Приложение для управления транзакциями
 - `templates/`: HTML-шаблоны
 - `static/`: Статические файлы (CSS, JS)
+
+## Иллюстрации
+1) Просмотр списка всех записей
+![screenshot1](https://github.com/KonnovKirill/django-tt/blob/main/Просмотр.png)
+2) Создание записи о движении денежных средств (ДДС)
+![screenshot2](https://github.com/KonnovKirill/django-tt/blob/main/Добавление.png)
+3) Управление справочниками
+![screenshot3](https://github.com/KonnovKirill/django-tt/blob/main/Управление.png)
